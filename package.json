@@ -2,7 +2,7 @@
   "name": "onboard-joao-arroyo",
   "version": "1.0.0",
   "description": "Onboard Backend",
-  "main": "server.ts",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
     "compile": "tsc",
