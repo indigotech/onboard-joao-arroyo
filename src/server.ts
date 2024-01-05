@@ -20,8 +20,24 @@ const server = new ApolloServer({
   resolvers,
 });
 
-const { url } = await startStandaloneServer(server, {
-  listen: { port: 3000 },
-});
+async function iniciarServidor() {
+  try {
+    const { url } = await startStandaloneServer(server, {
+      listen: { port: 4000 },
+    });
 
-console.log(`Server ready at: ${url}`);
+    console.log(`Server ready at: ${url}`);
+  } catch (erro) {
+    if (erro instanceof Error) {
+      console.error(`Erro ao iniciar o servidor: ${erro.message}`);
+    } else {
+      console.error(`Erro ao iniciar o servidor: ${erro}`);
+    }
+  }
+}
+
+iniciarServidor()
+  .then(() => {})
+  .catch((erro) => {
+    console.error(`Erro durante a execução: ${erro}`);
+  });
