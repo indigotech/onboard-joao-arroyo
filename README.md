@@ -18,15 +18,25 @@ Can be downloaded with: `$ nvm install 18.16.0`
 
 - **npm:** 9.5.1
 
-- **PostgreSQL:** 16.1 [Download here](https://www.postgresql.org/download/)
+- **TypeScript:** 5.3.3 (one does not need to download globally) [Documentation here](https://www.typescriptlang.org/docs/)
 
-- **TypeScript:** 5.3.3 (one does not need to download globally)
+- **Apollo Server:** 4.10.0 [Documentation here](https://www.apollographql.com/docs/apollo-server/)
 
-- **Apollo Server:** 4.10.0 [Link to Apollo Server](https://www.apollographql.com/docs/apollo-server/)
-
-- **GraphQL:** 16.8.1 [Link to GraphQL](https://graphql.org/)
+- **GraphQL:** 16.8.1 [Documentation here](https://graphql.org/learn/)
 
 - **Docker:** 24.0.7 [Download here](https://www.docker.com/products/docker-desktop/)
+
+- **PostgreSQL:** 16.1 [Download here](https://www.postgresql.org/download/)
+
+Or **use postgres directly from docker**
+
+Instead of a separate download, one can download the postgres image directly from docker.
+
+`$ docker pull postgres:16.1`
+
+Then, create the container. Remember that the credentials must be the same as the defined in data-source.ts file.
+
+`$ docker run --name <chosen-name> -e POSTGRES_PASSWORD=<chosen-password> -e POSTGRES_USER=<chosen-user> -e POSTGRES_DB=<chosen-db-name> -d -p 5432:5432 postgres:16.1`
 
 ## Steps to run and debug
 
@@ -45,6 +55,8 @@ Can be downloaded with: `$ nvm install 18.16.0`
 - If you want to interact with the database, first it's necessary to run:
 
 `$ docker compose up -d`
+
+**Important:** if it's the firt access to the created container, go to the file src > data-source.ts and check that the property synchronized is set true. This ensures that the not yet known entity will have it's table correctly set up in the database. Keep in mind that to run new migrations it's preferable to set this property to false again.
 
 Then one can use the following script to add an user to the database:
 
