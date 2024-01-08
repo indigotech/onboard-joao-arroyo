@@ -1,19 +1,7 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-
-const typeDefs = `#graphql  
-  type Query {    
-    hello: String
-  }  
-`;
-
-const resolvers = {
-  Query: {
-    hello: (): string => {
-      return 'Hello world!';
-    },
-  },
-};
+import { typeDefs } from './type-defs';
+import { resolvers } from './resolvers';
 
 const server = new ApolloServer({
   typeDefs,
@@ -36,8 +24,6 @@ async function startServer() {
   }
 }
 
-startServer()
-  .then(() => {})
-  .catch((error) => {
-    console.error(`Error in execution: ${error}`);
-  });
+startServer().catch((error) => {
+  console.error(`Error in execution: ${error}`);
+});
