@@ -10,9 +10,22 @@ export const resolvers = {
 
   Mutation: {
     createUser: async (parent, args: { data: User }) => {
+      const userRepository = AppDataSource.getRepository(User);
+
+      if (!validPassword(args.data.password)) {
+        throw new Error(
+          'Password is not strong enough: should be at least 6 characters long and have at least one letter and 1 digit.',
+        );
+      }
+
+      if (await duplicateEmail(args.data.email)) {
+        throw new Error('Email already in use.');
+      }
+
       const user = new User();
       Object.assign(user, args.data);
-      const savedUser = await AppDataSource.manager.save(user);
+
+      const savedUser = await userRepository.save(user);
 
       return {
         id: savedUser.id,
@@ -23,3 +36,18 @@ export const resolvers = {
     },
   },
 };
+
+function validPassword(password: string): boolean {
+  const regex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
+  return regex.test(password);
+}
+
+async function duplicateEmail(email: string) {
+  const userRepository = AppDataSource.getRepository(User);
+  const user = await userRepository.find({
+    where: {
+      email: email,
+    },
+  });
+  return user.length;
+}
