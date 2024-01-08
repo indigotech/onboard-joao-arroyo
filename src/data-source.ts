@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
   username: 'local_user',
   password: 'taqlocal',
   database: 'local_db',
-  synchronize: false,
+  synchronize: true,
   logging: false,
   entities: [User],
   migrations: ['dist/migrations/*.js'],
