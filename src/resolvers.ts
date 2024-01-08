@@ -12,13 +12,13 @@ export const resolvers = {
     createUser: async (parent, args: { data: User }) => {
       const user = new User();
       Object.assign(user, args.data);
-      await AppDataSource.manager.save(user);
+      const savedUser = await AppDataSource.manager.save(user);
 
       return {
-        id: user.id,
-        name: args.data.name,
-        email: args.data.email,
-        birthDate: args.data.birthDate,
+        id: savedUser.id,
+        name: savedUser.name,
+        email: savedUser.email,
+        birthDate: savedUser.birthDate,
       };
     },
   },
