@@ -4,7 +4,6 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 interface User {
   name: string;
   email: string;
-  password: string;
   birthDate: string;
 }
 
