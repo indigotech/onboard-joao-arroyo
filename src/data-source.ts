@@ -15,3 +15,13 @@ export const AppDataSource = new DataSource({
   migrations: ['dist/migrations/*.js'],
   subscribers: [],
 });
+
+export async function initializeDataSource() {
+  try {
+    await AppDataSource.initialize();
+    console.log('TypeORM connection initialized successfully.');
+  } catch (error) {
+    console.error(`Error initializing TypeORM connection: ${error}`);
+    throw error;
+  }
+}
