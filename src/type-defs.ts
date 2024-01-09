@@ -1,9 +1,3 @@
-export interface User {
-  name: string;
-  email: string;
-  birthDate: string;
-}
-
 export const typeDefs = `
     type Query {
       hello: String

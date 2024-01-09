@@ -2,6 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 import { typeDefs } from './type-defs';
 import { resolvers } from './resolvers';
+import { initializeDataSource } from './data-source';
 
 const server = new ApolloServer({
   typeDefs,
@@ -10,6 +11,8 @@ const server = new ApolloServer({
 
 async function startServer() {
   try {
+    await initializeDataSource();
+
     const { url } = await startStandaloneServer(server, {
       listen: { port: 4000 },
     });

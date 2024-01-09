@@ -1,4 +1,5 @@
-import { User } from './type-defs';
+import { AppDataSource } from './data-source';
+import { User } from './entity/User';
 
 export const resolvers = {
   Query: {
@@ -8,14 +9,17 @@ export const resolvers = {
   },
 
   Mutation: {
-    createUser: (parent, args: { data: User }) => {
-      const newUser = {
-        id: 1,
-        name: args.data.name,
-        email: args.data.email,
-        birthDate: args.data.birthDate,
+    createUser: async (parent, args: { data: User }) => {
+      const user = new User();
+      Object.assign(user, args.data);
+      const savedUser = await AppDataSource.manager.save(user);
+
+      return {
+        id: savedUser.id,
+        name: savedUser.name,
+        email: savedUser.email,
+        birthDate: savedUser.birthDate,
       };
-      return newUser;
     },
   },
 };
