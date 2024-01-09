@@ -49,5 +49,5 @@ async function duplicateEmail(email: string) {
       email: email,
     },
   });
-  return user.length;
+  return !!user.length;
 }
