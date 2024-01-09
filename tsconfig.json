@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDirs": ["./src"],
-    "baseUrl": "./src",    
+    "baseUrl": "./src",
     "outDir": "dist",
     "lib": ["es2020", "es6", "es5"],
     "target": "es2020",
@@ -14,9 +14,5 @@
     "sourceMap": true
   },
   "include": ["src/**/*.ts"],
-  "exclude": [
-    "node_modules",
-    "dist",    
-    "src/test/**/*.ts"
-  ],  
+  "exclude": ["node_modules", "dist", "src/test/**/*.ts"]
 }

@@ -5,10 +5,10 @@
   "main": "dist/server.js",
   "scripts": {
     "clean-dist": "rm -rf ./dist",
-    "compile": "npm run clean-dist && tsc",
+    "compile": "npm run clean-dist && tsc -p tsconfig.json",
     "start": "npm run compile && node ./dist/server.js",
     "test-typeorm": "npm run compile && node ./dist/index.js",
-    "test": "mocha -r ts-node/register test/index.ts --exit",
+    "test": "mocha -r ts-node/register src/test/index.ts --exit",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
     "typeorm": "typeorm-ts-node-commonjs"
