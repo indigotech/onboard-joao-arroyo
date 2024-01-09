@@ -44,10 +44,9 @@ function validPassword(password: string): boolean {
 
 async function duplicateEmail(email: string) {
   const userRepository = AppDataSource.getRepository(User);
-  const user = await userRepository.find({
+  return !!(await userRepository.count({
     where: {
       email: email,
     },
-  });
-  return !!user.length;
+  }));
 }
