@@ -1,5 +1,6 @@
 import { AppDataSource } from './data-source';
 import { User } from './entity/User';
+import * as bcrypt from 'bcrypt';
 
 export const resolvers = {
   Query: {
@@ -24,6 +25,9 @@ export const resolvers = {
 
       const user = new User();
       Object.assign(user, args.data);
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(args.data.password, salt);
 
       const savedUser = await userRepository.save(user);
 
