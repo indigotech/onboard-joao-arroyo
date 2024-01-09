@@ -9,15 +9,17 @@ const server = new ApolloServer({
   resolvers,
 });
 
-async function startServer() {
-  try {
-    await initializeDataSource();
+async function connectedDb() {
+  await initializeDataSource();
+}
 
+async function setupServer() {
+  try {
     const { url } = await startStandaloneServer(server, {
       listen: { port: 4000 },
     });
 
-    console.log(`Server ready at: ${url}`);
+    console.log(`Server running on: ${url}`);
   } catch (error) {
     if (error instanceof Error) {
       console.error(`Error starting the server: ${error.message}`);
@@ -27,6 +29,11 @@ async function startServer() {
   }
 }
 
-startServer().catch((error) => {
-  console.error(`Error in execution: ${error}`);
-});
+export async function setup() {
+  await connectedDb();
+  await setupServer();
+}
+
+if (require.main === module) {
+  setup().catch((error) => console.log(error));
+}
