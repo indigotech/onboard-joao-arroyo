@@ -18,7 +18,6 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "4.10.0",
-    "@types/chai": "4.3.11",
     "axios": "1.6.5",
     "bcrypt": "5.1.1",
     "graphql": "16.8.1",
@@ -28,6 +27,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "5.0.2",
+    "@types/chai": "4.3.11",
     "@types/mocha": "9.1.1",
     "@types/node": "16.11.10",
     "@typescript-eslint/eslint-plugin": "6.17.0",
