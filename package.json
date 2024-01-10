@@ -7,7 +7,6 @@
     "clean-dist": "rm -rf ./dist",
     "compile": "npm run clean-dist && tsc -p tsconfig.json",
     "start": "npm run compile && node ./dist/index.js",
-    "test-typeorm": "npm run compile && node ./dist/test-typeorm.js",
     "test": "mocha -r ts-node/register src/test/index.ts --exit",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
