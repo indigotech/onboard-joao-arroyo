@@ -1,6 +1,8 @@
 export const typeDefs = `
     type Query {
-      hello: String
+      users: [User]
+      findUser(id: ID!): CompleteUser
+      hello: String      
     }
   
     type User {
@@ -8,6 +10,14 @@ export const typeDefs = `
       name: String!
       email: String!
       birthDate: String!
+    }
+
+    type CompleteUser {
+      id: ID!
+      name: String!
+      email: String!
+      birthDate: String!
+      password: String!
     }
   
     input UserInput {

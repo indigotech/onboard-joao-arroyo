@@ -1,3 +1,4 @@
+import { FindUserInput } from 'interfaces';
 import { appDataSource } from './data-source';
 import { User } from './entity/User';
 import * as bcrypt from 'bcrypt';
@@ -6,6 +7,21 @@ export const resolvers = {
   Query: {
     hello: (): string => {
       return 'Hello world!';
+    },
+    users: async () => {
+      const userRepository = appDataSource.getRepository(User);
+      const users: User[] = await userRepository.find();
+      console.log(users);
+      return users;
+    },
+    findUser: async (parent, args: FindUserInput) => {
+      const userRepository = appDataSource.getRepository(User);
+      const user = await userRepository.findOne({
+        where: {
+          id: args.id,
+        },
+      });
+      return user;
     },
   },
 
