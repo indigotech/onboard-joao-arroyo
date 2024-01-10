@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
-    "rootDirs": ["src"],
+    "rootDirs": ["./src"],
+    "baseUrl": "./src",
     "outDir": "dist",
     "lib": ["es2020", "es6", "es5"],
     "target": "es2020",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "types": ["node"],
+    "types": ["node", "mocha"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "sourceMap": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "src/test/**/*.ts"]
 }

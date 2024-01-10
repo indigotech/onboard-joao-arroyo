@@ -4,9 +4,11 @@
   "description": "Onboard Backend",
   "main": "dist/server.js",
   "scripts": {
-    "compile": "tsc",
+    "clean-dist": "rm -rf ./dist",
+    "compile": "npm run clean-dist && tsc -p tsconfig.json",
     "start": "npm run compile && node ./dist/server.js",
     "test-typeorm": "npm run compile && node ./dist/index.js",
+    "test": "mocha -r ts-node/register src/test/index.ts --exit",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
     "typeorm": "typeorm-ts-node-commonjs"
@@ -24,10 +26,12 @@
   },
   "devDependencies": {
     "@types/bcrypt": "5.0.2",
+    "@types/mocha": "10.0.6",
     "@types/node": "16.11.10",
     "@typescript-eslint/eslint-plugin": "6.17.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.2",
+    "mocha": "10.2.0",
     "prettier": "3.1.1",
     "ts-node": "10.9.1",
     "typescript": "5.3.3"
