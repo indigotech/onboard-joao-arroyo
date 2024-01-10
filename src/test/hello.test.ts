@@ -11,7 +11,6 @@ describe('Hello Query', () => {
       `,
     });
 
-    console.log(result.data);
     expect(result.data).to.be.deep.eq({
       data: {
         hello: 'Hello world!',
