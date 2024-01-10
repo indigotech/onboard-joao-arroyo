@@ -1,4 +1,4 @@
-import { AppDataSource } from './data-source';
+import { appDataSource } from './data-source';
 import { User } from './entity/User';
 import * as bcrypt from 'bcrypt';
 
@@ -11,7 +11,7 @@ export const resolvers = {
 
   Mutation: {
     createUser: async (parent, args: { data: User }) => {
-      const userRepository = AppDataSource.getRepository(User);
+      const userRepository = appDataSource.getRepository(User);
 
       if (!validPassword(args.data.password)) {
         throw new Error(
@@ -47,7 +47,7 @@ function validPassword(password: string): boolean {
 }
 
 async function duplicateEmail(email: string) {
-  const userRepository = AppDataSource.getRepository(User);
+  const userRepository = appDataSource.getRepository(User);
   return !!(await userRepository.count({
     where: {
       email: email,

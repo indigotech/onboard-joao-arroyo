@@ -1,7 +1,9 @@
-import { setup } from '../server';
+import { setup } from '../setup';
 import { before } from 'mocha';
+import { config } from 'dotenv';
 
 before(async () => {
+  config({ path: `${process.cwd()}/test.env` });
   await setup();
 });
 

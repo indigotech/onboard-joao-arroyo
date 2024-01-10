@@ -6,8 +6,8 @@
   "scripts": {
     "clean-dist": "rm -rf ./dist",
     "compile": "npm run clean-dist && tsc -p tsconfig.json",
-    "start": "npm run compile && node ./dist/server.js",
-    "test-typeorm": "npm run compile && node ./dist/index.js",
+    "start": "npm run compile && node ./dist/index.js",
+    "test-typeorm": "npm run compile && node ./dist/test-typeorm.js",
     "test": "mocha -r ts-node/register src/test/index.ts --exit",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
@@ -20,6 +20,7 @@
     "@apollo/server": "4.10.0",
     "axios": "1.6.5",
     "bcrypt": "5.1.1",
+    "dotenv": "16.0.0",
     "graphql": "16.8.1",
     "pg": "8.11.3",
     "reflect-metadata": "0.1.13",
