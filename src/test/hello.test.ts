@@ -3,7 +3,7 @@ import { expect } from 'chai';
 
 describe('Hello Query', () => {
   it('should return hello message', async () => {
-    const result = await axios.post('http://localhost:4000/graphql', {
+    const result = await axios.post(`http://localhost:${process.env.PORT}/graphql`, {
       query: `
         query Hello {
           hello

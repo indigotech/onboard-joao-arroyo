@@ -1,22 +1,19 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
-import { typeDefs } from './type-defs';
+import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
-import { initializeDataSource } from './data-source';
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+import { appDataSource } from './data-source';
 
 async function connectedDb() {
-  await initializeDataSource();
+  await appDataSource.setOptions({ url: process.env.DATABASE_URL }).initialize();
+  console.info('DB connected!');
 }
 
 async function setupServer() {
   try {
+    const server = new ApolloServer({ typeDefs, resolvers });
     const { url } = await startStandaloneServer(server, {
-      listen: { port: 4000 },
+      listen: { port: +process.env.PORT },
     });
 
     console.log(`Server running on: ${url}`);
@@ -32,8 +29,4 @@ async function setupServer() {
 export async function setup() {
   await connectedDb();
   await setupServer();
-}
-
-if (require.main === module) {
-  setup().catch((error) => console.log(error));
 }
