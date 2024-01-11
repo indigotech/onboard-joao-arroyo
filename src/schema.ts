@@ -1,7 +1,5 @@
 export const typeDefs = `
-    type Query {
-      users: [User]
-      findUser(id: ID!): CompleteUser
+    type Query {      
       hello: String      
     }
   
