@@ -5,7 +5,7 @@ import { User } from '../entity/User';
 import * as bcrypt from 'bcrypt';
 
 describe('Create User Mutation', () => {
-  after(async () => {
+  afterEach(async () => {
     await appDataSource.getRepository(User).clear();
   });
 
@@ -101,12 +101,16 @@ describe('Create User Mutation', () => {
   });
 
   it('should not register an user due to repeated email', async () => {
+    const userRepository = appDataSource.getRepository(User);
     const newUser = {
       password: 'v4lidp4ass',
       email: 'first@example.com',
       birthDate: '09/12/2004',
-      name: 'user 2',
+      name: 'user 1',
     };
+    const copyUser = { ...newUser };
+
+    await userRepository.save(newUser);
 
     const result = await axios.post(`http://localhost:${process.env.PORT}/graphql`, {
       query: `mutation ($input: UserInput!) {
@@ -118,13 +122,12 @@ describe('Create User Mutation', () => {
     }
   }`,
       variables: {
-        input: newUser,
+        input: copyUser,
       },
     });
 
     expect(result?.data?.errors[0].message).to.equal('Email already in use.');
 
-    const userRepository = appDataSource.getRepository(User);
     expect(await userRepository.count()).to.equal(1);
   });
 });
