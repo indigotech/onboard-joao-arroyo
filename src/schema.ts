@@ -1,6 +1,6 @@
 export const typeDefs = `
-    type Query {      
-      hello: String      
+    type Query {
+      hello: String
     }
   
     type User {
@@ -8,15 +8,7 @@ export const typeDefs = `
       name: String!
       email: String!
       birthDate: String!
-    }
-
-    type CompleteUser {
-      id: ID!
-      name: String!
-      email: String!
-      birthDate: String!
-      password: String!
-    }
+    }    
   
     input UserInput {
       name: String!
