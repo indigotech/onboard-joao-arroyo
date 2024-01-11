@@ -1,5 +1,6 @@
 import { appDataSource } from './data-source';
 import { User } from './entity/User';
+import { CustomError } from './custom-error';
 import * as bcrypt from 'bcrypt';
 
 export const resolvers = {
@@ -14,13 +15,15 @@ export const resolvers = {
       const userRepository = appDataSource.getRepository(User);
 
       if (!validPassword(args.data.password)) {
-        throw new Error(
-          'Password is not strong enough: should be at least 6 characters long and have at least one letter and 1 digit.',
+        throw new CustomError(
+          'Invalid password.',
+          422,
+          'It should be at least 6 characters long and have at least one letter and 1 digit.',
         );
       }
 
       if (await duplicateEmail(args.data.email)) {
-        throw new Error('Email already in use.');
+        throw new CustomError('Invalid email.', 422, 'This email is already in use.');
       }
 
       const user = new User();
