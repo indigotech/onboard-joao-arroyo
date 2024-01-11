@@ -41,14 +41,27 @@ export const resolvers = {
         birthDate: savedUser.birthDate,
       };
     },
-    login: (parent, args: { data: { email: string; password: string } }) => {
-      const user = {
-        id: 1,
-        name: 'mock name',
-        email: args.data.email,
-        birthDate: '09/09/1999',
-      };
-      return { user: user, token: 'mockedToken' };
+    login: async (_: unknown, args: { data: { email: string; password: string } }) => {
+      const userRepository = appDataSource.getRepository(User);
+      const users: User[] = await userRepository.find({
+        where: {
+          email: args.data.email,
+        },
+      });
+
+      if (users.length == 0) {
+        throw new CustomError('Invalid email.', 422, 'No user was found with the corresponding email.');
+      }
+
+      const user = users[0];
+
+      const correctPassword = await bcrypt.compare(args.data.password, user.password);
+
+      if (!correctPassword) {
+        throw new CustomError('Invalid password.', 422, 'Incorrect password for the given email.');
+      }
+
+      return { user: user, token: ' ' };
     },
   },
 };
