@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { createUserRequest } from './helper';
 import { expect } from 'chai';
 import { appDataSource } from '../data-source';
 import { User } from '../entity/User';
@@ -23,20 +23,7 @@ describe('Create User Mutation', () => {
       birthDate: '12/09/2004',
       name: 'user 1',
     };
-
-    const result = await axios.post(`http://localhost:${process.env.PORT}/graphql`, {
-      query: `mutation ($input: UserInput!) {
-    createUser(data: $input) {
-      email
-      birthDate
-      name
-      id
-    }
-  }`,
-      variables: {
-        input: newUser,
-      },
-    });
+    const result = await createUserRequest({ input: newUser });
 
     expect(result?.data?.errors[0].message).to.equal(
       'Password is not strong enough: should be at least 6 characters long and have at least one letter and 1 digit.',
@@ -51,25 +38,12 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
 
-    const createResult = await axios.post(`http://localhost:${process.env.PORT}/graphql`, {
-      query: `mutation ($input: UserInput!) {
-    createUser(data: $input) {
-      email
-      birthDate
-      name
-      id
-    }
-  }`,
-      variables: {
-        input: newUser,
-      },
-    });
+    const createResult = await createUserRequest({ input: newUser });
 
     expect(createResult.data?.data?.createUser).to.exist;
 
     const createdUser: User = createResult.data?.data?.createUser;
 
-    // check that the object returned from mutation is the one defined by the input
     expect(createdUser.id).to.exist;
     expect(createdUser.id).to.match(/^\d+$/);
     expect(createdUser.email).to.equal(newUser.email);
@@ -85,8 +59,6 @@ describe('Create User Mutation', () => {
     });
 
     expect(fetchedUser).to.exist;
-
-    // check that the object returned from database query is the same as the initially assigned
 
     expect(fetchedUser?.id).to.exist;
     expect(fetchedUser?.id).to.match(/^\d+$/);
@@ -112,19 +84,7 @@ describe('Create User Mutation', () => {
 
     await userRepository.save(newUser);
 
-    const result = await axios.post(`http://localhost:${process.env.PORT}/graphql`, {
-      query: `mutation ($input: UserInput!) {
-    createUser(data: $input) {
-      email
-      birthDate
-      name
-      id
-    }
-  }`,
-      variables: {
-        input: copyUser,
-      },
-    });
+    const result = await createUserRequest({ input: copyUser });
 
     expect(result?.data?.errors[0].message).to.equal('Email already in use.');
 
