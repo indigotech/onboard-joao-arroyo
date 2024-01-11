@@ -8,7 +8,7 @@ export const typeDefs = `
       name: String!
       email: String!
       birthDate: String!
-    }    
+    }
   
     input UserInput {
       name: String!
