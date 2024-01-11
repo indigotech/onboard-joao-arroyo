@@ -41,11 +41,11 @@ export const resolvers = {
         birthDate: savedUser.birthDate,
       };
     },
-    login: () => {
+    login: (parent, args: { data: { email: string; password: string } }) => {
       const user = {
         id: 1,
         name: 'mock name',
-        email: 'joe.doe@fake.com',
+        email: args.data.email,
         birthDate: '09/09/1999',
       };
       return { user: user, token: 'mockedToken' };

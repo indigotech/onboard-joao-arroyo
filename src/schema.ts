@@ -11,12 +11,7 @@ export const typeDefs = `
     }
 
     type LoginResponse {
-      {
-        id: ID!
-        name: String!
-        email: String!
-        birthDate: String!
-      } 
+      user: User!,            
       token: String!
     }
 
