@@ -46,7 +46,7 @@ export const resolvers = {
         birthDate: savedUser.birthDate,
       };
     },
-    login: async (_: unknown, args: { data: { email: string; password: string } }) => {
+    login: async (_: unknown, args: { data: { email: string; password: string; rememberMe?: boolean } }) => {
       const userRepository = appDataSource.getRepository(User);
 
       if (!validEmail(args.data.email)) {
@@ -71,7 +71,8 @@ export const resolvers = {
         throw new CustomError('Invalid password.', 401, 'Incorrect password for the given email.');
       }
 
-      const token = generateToken({ id: user.id.toString() });
+      const rememberMe = args.data.rememberMe === true;
+      const token = generateToken({ id: user.id.toString() }, rememberMe);
 
       return { user: user, token: token };
     },
