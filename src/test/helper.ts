@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function createUserRequest(variables, token) {
+export async function createUserRequest(variables, token: string) {
   const result = await axios.post(
     `http://localhost:${process.env.PORT}/graphql`,
     {
@@ -38,5 +38,29 @@ export async function loginRequest(variables) {
       }`,
     variables: variables,
   });
+  return result;
+}
+
+export async function userQueryRequest(variables, token: string) {
+  const result = await axios.post(
+    `http://localhost:${process.env.PORT}/graphql`,
+    {
+      query: `query ($input: queryUserInput!) {
+        user(data: $input) {
+          email
+          birthDate
+          name
+          id
+        }
+      }`,
+      variables: variables,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    },
+  );
   return result;
 }

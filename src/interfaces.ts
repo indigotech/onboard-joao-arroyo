@@ -10,3 +10,6 @@ export interface LoginInput {
   password: string;
   rememberMe?: boolean;
 }
+export interface queryUserInput {
+  id: string;
+}
