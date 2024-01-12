@@ -4,50 +4,74 @@ import { loginRequest, createUserRequest } from './helper';
 import { appDataSource } from '../data-source';
 import { CustomError } from '../custom-error';
 
+async function createUserAndAssert(user: { name: string; password: string; birthDate: string; email: string }) {
+  const response = await createUserRequest({ input: user });
+  const createdUser: User = response.data?.data?.createUser;
+  expect(createdUser.birthDate).to.equal(user.birthDate);
+  expect(createdUser.email).to.equal(user.email);
+  expect(createdUser.name).to.equal(user.name);
+  expect(createdUser.id).to.match(/^\d+$/);
+}
+
 describe('Login Mutation', () => {
   afterEach(async () => {
     await appDataSource.getRepository(User).clear();
   });
 
-  it('should return mocked data in the specified format', async () => {
+  it('should not complete login due to email not found', async () => {
     const user = {
       birthDate: '09/11/2022',
       email: 'test@fake.com',
       name: 'test user',
       password: 'c0rr3ctp4ass',
     };
-    let response = await createUserRequest({ input: user });
-    const createdUser: User = response.data?.data?.createUser;
-    expect(createdUser.birthDate).to.equal(user.birthDate);
-    expect(createdUser.email).to.equal(user.email);
-    expect(createdUser.name).to.equal(user.name);
-    expect(createdUser.id).to.match(/^\d+$/);
+    await createUserAndAssert(user);
 
-    let loginParams = { email: 'wrong@fake.com', password: 'v4l1dp4ss' };
+    const loginParams = { email: 'wrong@fake.com', password: 'v4l1dp4ss' };
 
-    response = await loginRequest({ input: loginParams });
+    const response = await loginRequest({ input: loginParams });
 
     expect(response).to.exist;
 
-    let customError: CustomError = response?.data?.errors[0];
+    const customError: CustomError = response?.data?.errors[0];
 
     expect(customError.message).to.equal('Invalid email.');
     expect(customError.code).to.equal(422);
     expect(customError.additionalInfo).to.equal('No user was found with the corresponding email.');
+  });
 
-    loginParams = { email: 'test@fake.com', password: '1nc0rrectp4ass' };
+  it('should not complete login due to incorrect password', async () => {
+    const user = {
+      birthDate: '09/11/2022',
+      email: 'test@fake.com',
+      name: 'test user',
+      password: 'c0rr3ctp4ass',
+    };
+    await createUserAndAssert(user);
 
-    response = await loginRequest({ input: loginParams });
+    const loginParams = { email: 'test@fake.com', password: '1nc0rrectp4ass' };
 
-    customError = response?.data?.errors[0];
+    const response = await loginRequest({ input: loginParams });
+
+    const customError = response?.data?.errors[0];
 
     expect(customError.message).to.equal('Invalid password.');
     expect(customError.code).to.equal(422);
     expect(customError.additionalInfo).to.equal('Incorrect password for the given email.');
+  });
 
-    loginParams = { email: 'test@fake.com', password: 'c0rr3ctp4ass' };
+  it('should complete login', async () => {
+    const user = {
+      birthDate: '09/11/2022',
+      email: 'test@fake.com',
+      name: 'test user',
+      password: 'c0rr3ctp4ass',
+    };
+    await createUserAndAssert(user);
 
-    response = await loginRequest({ input: loginParams });
+    const loginParams = { email: 'test@fake.com', password: 'c0rr3ctp4ass' };
+
+    const response = await loginRequest({ input: loginParams });
 
     const loginResponse = response?.data?.data?.login;
 
