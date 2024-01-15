@@ -20,3 +20,7 @@ export interface LoginInput {
 export interface QueryUserInput {
   id: string;
 }
+
+export interface QueryUsersInput {
+  maxUsers: number;
+}

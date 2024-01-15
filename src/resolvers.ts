@@ -4,7 +4,7 @@ import { CustomError } from './custom-error';
 import * as bcrypt from 'bcrypt';
 import { hashPassword, validEmail, validPassword } from './utils';
 import { generateToken } from './token-generator';
-import { LoginInput } from 'interfaces';
+import { LoginInput, QueryUsersInput } from 'interfaces';
 import { authenticate } from './authenticate';
 
 export const resolvers = {
@@ -27,6 +27,30 @@ export const resolvers = {
       }
 
       return fetchedUser;
+    },
+    users: async (_: unknown, args: { data: QueryUsersInput } | undefined, context: { token: string }) => {
+      authenticate(context.token);
+
+      const userRepository = appDataSource.getRepository(User);
+
+      const maxUsers = args?.data?.maxUsers || 15;
+
+      if (maxUsers <= 0) {
+        throw new CustomError(
+          'The number of users is invalid.',
+          400,
+          'The number of required users should be a positive integer.',
+        );
+      }
+
+      const fetchedUsers: User[] | undefined = await userRepository.find({
+        order: {
+          name: 'ASC',
+        },
+        take: maxUsers,
+      });
+
+      return fetchedUsers;
     },
   },
 

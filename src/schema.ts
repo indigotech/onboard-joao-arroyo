@@ -1,7 +1,8 @@
 export const typeDefs = `
     type Query {
       hello: String
-      user(data: QueryUserInput!): User      
+      user(data: QueryUserInput!): User
+      users(data: QueryUsersInput): [User]
     }
       
     type User {
@@ -18,6 +19,10 @@ export const typeDefs = `
 
     input QueryUserInput {
       id: ID!
+    }
+
+    input QueryUsersInput {
+      maxUsers: Int
     }
 
     input LoginInput {
