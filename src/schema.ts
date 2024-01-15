@@ -1,6 +1,7 @@
 export const typeDefs = `
     type Query {
       hello: String
+      user(data: QueryUserInput!): User      
     }
       
     type User {
@@ -13,6 +14,10 @@ export const typeDefs = `
     type LoginResponse {
       user: User!,            
       token: String!
+    }
+
+    input QueryUserInput {
+      id: ID!
     }
 
     input LoginInput {

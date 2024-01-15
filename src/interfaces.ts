@@ -5,8 +5,18 @@ export interface DecodedToken {
   exp: number;
 }
 
+export interface CreateUserInput {
+  password: string;
+  email: string;
+  birthDate: string;
+  name: string;
+}
+
 export interface LoginInput {
   email: string;
   password: string;
   rememberMe?: boolean;
+}
+export interface QueryUserInput {
+  id: string;
 }

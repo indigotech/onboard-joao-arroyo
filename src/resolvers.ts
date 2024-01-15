@@ -12,6 +12,22 @@ export const resolvers = {
     hello: (): string => {
       return 'Hello world!';
     },
+    user: async (_: unknown, args: { data: { id: string } }, context: { token: string }) => {
+      authenticate(context.token);
+
+      const userRepository = appDataSource.getRepository(User);
+      const fetchedUser: User | undefined = await userRepository.findOne({
+        where: {
+          id: +args.data.id,
+        },
+      });
+
+      if (!fetchedUser) {
+        throw new CustomError('User Not Found', 404, 'No user found with the provided ID.');
+      }
+
+      return fetchedUser;
+    },
   },
 
   Mutation: {
