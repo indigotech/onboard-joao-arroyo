@@ -7,6 +7,7 @@
     "clean-dist": "rm -rf ./dist",
     "compile": "npm run clean-dist && tsc -p tsconfig.json",
     "start": "npm run compile && node ./dist/index.js",
+    "seeds": "npm run compile && node ./dist/seed/seeds.js",
     "test": "mocha -r ts-node/register src/test/index.ts --exit",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
@@ -27,6 +28,7 @@
     "typeorm": "0.3.19"
   },
   "devDependencies": {
+    "@faker-js/faker": "8.3.1",
     "@types/bcrypt": "5.0.2",
     "@types/chai": "4.3.11",
     "@types/jsonwebtoken": "9.0.5",

@@ -6,7 +6,7 @@ import { appDataSource } from './data-source';
 import { formatError } from './format-error';
 import { context } from './context';
 
-async function connectedDb() {
+export async function connectedDb() {
   await appDataSource.setOptions({ url: process.env.DATABASE_URL }).initialize();
   console.info('DB connected!');
 }
