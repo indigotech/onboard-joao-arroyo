@@ -26,7 +26,7 @@ describe('Create User Mutation', () => {
     const result = await createUserRequest({ input: newUser });
 
     expect(result?.data?.errors[0].message).to.equal('Invalid password.');
-    expect(result?.data?.errors[0].code).to.equal(422);
+    expect(result?.data?.errors[0].code).to.equal(400);
     expect(result?.data?.errors[0].additionalInfo).to.equal(
       'It should be at least 6 characters long and have at least one letter and 1 digit.',
     );
@@ -89,7 +89,7 @@ describe('Create User Mutation', () => {
     const result = await createUserRequest({ input: copyUser });
 
     expect(result?.data?.errors[0].message).to.equal('Invalid email.');
-    expect(result?.data?.errors[0].code).to.equal(422);
+    expect(result?.data?.errors[0].code).to.equal(409);
     expect(result?.data?.errors[0].additionalInfo).to.equal('This email is already in use.');
 
     expect(await userRepository.count()).to.equal(1);
