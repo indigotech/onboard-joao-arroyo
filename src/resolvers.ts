@@ -41,6 +41,15 @@ export const resolvers = {
         birthDate: savedUser.birthDate,
       };
     },
+    login: (parent, args: { data: { email: string; password: string } }) => {
+      const user = {
+        id: 1,
+        name: 'mock name',
+        email: args.data.email,
+        birthDate: '09/09/1999',
+      };
+      return { user: user, token: 'mockedToken' };
+    },
   },
 };
 
