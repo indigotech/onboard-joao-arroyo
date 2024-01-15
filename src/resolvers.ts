@@ -17,13 +17,13 @@ export const resolvers = {
       if (!validPassword(args.data.password)) {
         throw new CustomError(
           'Invalid password.',
-          422,
+          400,
           'It should be at least 6 characters long and have at least one letter and 1 digit.',
         );
       }
 
       if (await duplicateEmail(args.data.email)) {
-        throw new CustomError('Invalid email.', 422, 'This email is already in use.');
+        throw new CustomError('Invalid email.', 409, 'This email is already in use.');
       }
 
       const user = new User();
