@@ -90,7 +90,7 @@ describe('Login Mutation', () => {
     const response = await loginRequest({ input: loginParams });
     const loginResponse = response?.data?.data?.login;
 
-    const checkToken = generateToken({ email: createdUser.email, id: createdUser.id.toString() });
+    const checkToken = generateToken({ id: createdUser.id.toString() });
     expect(loginResponse).to.deep.eq({
       token: checkToken,
       user: {

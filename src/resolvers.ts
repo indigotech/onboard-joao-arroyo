@@ -70,7 +70,7 @@ export const resolvers = {
       if (!correctPassword) {
         throw new CustomError('Invalid password.', 401, 'Incorrect password for the given email.');
       }
-      const token = generateToken({ email: user.email, id: user.id.toString() });
+      const token = generateToken({ id: user.id.toString() });
 
       return { user: user, token: token };
     },
