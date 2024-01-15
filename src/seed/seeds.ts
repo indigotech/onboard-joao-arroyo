@@ -25,13 +25,14 @@ async function generateRandomData() {
 }
 
 async function seedDatabase() {
-  const userRepository = appDataSource.getRepository(User);
   await startConnection();
-
+  const userRepository = appDataSource.getRepository(User);
+  const users = [];
   for (let i = 0; i < 50; i++) {
     const newUser: CreateUserInput = await generateRandomData();
-    await userRepository.save(newUser);
+    users.push(newUser);
   }
+  await userRepository.save(users);
   console.log('Succesfully added 50 users to the local database.');
 }
 
