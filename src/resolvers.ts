@@ -3,6 +3,7 @@ import { User } from './entity/User';
 import { CustomError } from './custom-error';
 import * as bcrypt from 'bcrypt';
 import { hashPassword, validEmail, validPassword } from './utils';
+import { generateToken } from './token-generator';
 
 export const resolvers = {
   Query: {
@@ -69,8 +70,9 @@ export const resolvers = {
       if (!correctPassword) {
         throw new CustomError('Invalid password.', 401, 'Incorrect password for the given email.');
       }
+      const token = generateToken({ email: user.email, id: user.id.toString() });
 
-      return { user: user, token: ' ' };
+      return { user: user, token: token };
     },
   },
 };
