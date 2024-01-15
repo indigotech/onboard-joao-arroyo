@@ -3,6 +3,7 @@ import { startStandaloneServer } from '@apollo/server/standalone';
 import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
 import { appDataSource } from './data-source';
+import { formatError } from './format-error';
 
 async function connectedDb() {
   await appDataSource.setOptions({ url: process.env.DATABASE_URL }).initialize();
@@ -11,7 +12,12 @@ async function connectedDb() {
 
 async function setupServer() {
   try {
-    const server = new ApolloServer({ typeDefs, resolvers });
+    const server = new ApolloServer({
+      typeDefs,
+      resolvers,
+      formatError,
+    });
+
     const { url } = await startStandaloneServer(server, {
       listen: { port: +process.env.PORT },
     });
