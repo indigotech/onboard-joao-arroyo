@@ -3,7 +3,7 @@ import { User } from '../entity/User';
 import { appDataSource } from '../data-source';
 import { CustomError } from '../custom-error';
 import { userQueryRequest } from './helper';
-import { generateToken, generateInvalidToken } from '../token-generator';
+import { generateToken } from '../token-generator';
 
 describe('User query', () => {
   afterEach(async () => {
@@ -22,7 +22,7 @@ describe('User query', () => {
 
     const savedUser: User = await userRepository.save(user);
     const userId: string = savedUser.id.toString();
-    const invalidToken = generateInvalidToken({ email: savedUser.email, id: userId }, false);
+    const invalidToken = generateToken('wrongKey', { id: userId }, false);
 
     const response = await userQueryRequest({ input: { id: userId } }, invalidToken);
 
@@ -48,7 +48,7 @@ describe('User query', () => {
 
     const savedUser: User = await userRepository.save(user);
     const wrongId: string = (savedUser.id + 1).toString();
-    const token = generateToken({ email: savedUser.email, id: savedUser.id.toString() }, false);
+    const token = generateToken(process.env.JWT_KEY || '', { id: savedUser.id.toString() }, false);
 
     const response = await userQueryRequest({ input: { id: wrongId } }, token);
 
@@ -75,8 +75,7 @@ describe('User query', () => {
 
     const savedUser: User = await userRepository.save(user);
     const userId: string = savedUser.id.toString();
-    const token = generateToken({ email: savedUser.email, id: userId }, false);
-
+    const token = generateToken(process.env.JWT_KEY || '', { id: userId }, false);
     const response = await userQueryRequest({ input: { id: userId } }, token);
 
     expect(response).to.exist;

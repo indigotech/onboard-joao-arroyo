@@ -1,7 +1,7 @@
 export const typeDefs = `
     type Query {
       hello: String
-      user(data: queryUserInput!): User      
+      user(data: QueryUserInput!): User      
     }
       
     type User {
@@ -16,7 +16,7 @@ export const typeDefs = `
       token: String!
     }
 
-    input queryUserInput {
+    input QueryUserInput {
       id: ID!
     }
 

@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { CreateUserInput, LoginInput, QueryUserInput } from '../interfaces';
 
-export async function createUserRequest(variables, token: string) {
+export async function createUserRequest(variables: { input: CreateUserInput }, token: string) {
   const result = await axios.post(
     `http://localhost:${process.env.PORT}/graphql`,
     {
@@ -23,7 +24,7 @@ export async function createUserRequest(variables, token: string) {
   return result;
 }
 
-export async function loginRequest(variables) {
+export async function loginRequest(variables: { input: LoginInput }) {
   const result = await axios.post(`http://localhost:${process.env.PORT}/graphql`, {
     query: `mutation ($input: LoginInput!) {
         login(data: $input) {
@@ -41,11 +42,11 @@ export async function loginRequest(variables) {
   return result;
 }
 
-export async function userQueryRequest(variables, token: string) {
+export async function userQueryRequest(variables: { input: QueryUserInput }, token: string) {
   const result = await axios.post(
     `http://localhost:${process.env.PORT}/graphql`,
     {
-      query: `query ($input: queryUserInput!) {
+      query: `query ($input: QueryUserInput!) {
         user(data: $input) {
           email
           birthDate
