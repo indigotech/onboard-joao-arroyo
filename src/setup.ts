@@ -4,6 +4,7 @@ import { typeDefs } from './schema';
 import { resolvers } from './resolvers';
 import { appDataSource } from './data-source';
 import { formatError } from './format-error';
+import { context } from './context';
 
 async function connectedDb() {
   await appDataSource.setOptions({ url: process.env.DATABASE_URL }).initialize();
@@ -20,6 +21,7 @@ async function setupServer() {
 
     const { url } = await startStandaloneServer(server, {
       listen: { port: +process.env.PORT },
+      context,
     });
 
     console.log(`Server running on: ${url}`);

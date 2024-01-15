@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-export async function createUserRequest(variables) {
-  const result = await axios.post(`http://localhost:${process.env.PORT}/graphql`, {
-    query: `mutation ($input: UserInput!) {
+export async function createUserRequest(variables, token) {
+  const result = await axios.post(
+    `http://localhost:${process.env.PORT}/graphql`,
+    {
+      query: `mutation ($input: UserInput!) {
         createUser(data: $input) {
           email
           birthDate
@@ -10,8 +12,14 @@ export async function createUserRequest(variables) {
           id
         }
       }`,
-    variables: variables,
-  });
+      variables: variables,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
   return result;
 }
 

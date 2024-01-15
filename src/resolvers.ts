@@ -4,6 +4,8 @@ import { CustomError } from './custom-error';
 import * as bcrypt from 'bcrypt';
 import { hashPassword, validEmail, validPassword } from './utils';
 import { generateToken } from './token-generator';
+import { LoginInput } from 'interfaces';
+import { authenticate } from './authenticate';
 
 export const resolvers = {
   Query: {
@@ -13,7 +15,9 @@ export const resolvers = {
   },
 
   Mutation: {
-    createUser: async (parent, args: { data: User }) => {
+    createUser: async (_: unknown, args: { data: User }, context: { token: string }) => {
+      authenticate(context.token);
+
       const userRepository = appDataSource.getRepository(User);
 
       if (!validEmail(args.data.email)) {
@@ -46,10 +50,11 @@ export const resolvers = {
         birthDate: savedUser.birthDate,
       };
     },
-    login: async (_: unknown, args: { data: { email: string; password: string; rememberMe?: boolean } }) => {
+    login: async (_: unknown, args: { data: LoginInput }) => {
       const userRepository = appDataSource.getRepository(User);
 
-      if (!validEmail(args.data.email)) {
+      const email: string = args.data.email;
+      if (!validEmail(email)) {
         throw new CustomError('Invalid email.', 400, 'The provided email does not correspond to a valid email.');
       }
 
@@ -65,14 +70,15 @@ export const resolvers = {
 
       const user = users[0];
 
-      const correctPassword = await bcrypt.compare(args.data.password, user.password);
+      const password: string = args.data.password;
+      const correctPassword = await bcrypt.compare(password, user.password);
 
       if (!correctPassword) {
         throw new CustomError('Invalid password.', 401, 'Incorrect password for the given email.');
       }
 
       const rememberMe = args.data.rememberMe === true;
-      const token = generateToken({ id: user.id.toString() }, rememberMe);
+      const token = generateToken(process.env.JWT_KEY, { id: user.id.toString() }, rememberMe);
 
       return { user: user, token: token };
     },
