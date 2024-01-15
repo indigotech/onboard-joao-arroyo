@@ -4,6 +4,7 @@ import { loginRequest } from './helper';
 import { appDataSource } from '../data-source';
 import { CustomError } from '../custom-error';
 import { hashPassword } from '../utils';
+import { generateToken } from '../token-generator';
 
 async function createUser(user: { name: string; password: string; birthDate: string; email: string }) {
   const userRepository = appDataSource.getRepository(User);
@@ -89,8 +90,9 @@ describe('Login Mutation', () => {
     const response = await loginRequest({ input: loginParams });
     const loginResponse = response?.data?.data?.login;
 
+    const checkToken = generateToken({ id: createdUser.id.toString() });
     expect(loginResponse).to.deep.eq({
-      token: ' ',
+      token: checkToken,
       user: {
         id: createdUser.id.toString(),
         email: createdUser.email,
