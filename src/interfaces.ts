@@ -22,5 +22,6 @@ export interface QueryUserInput {
 }
 
 export interface QueryUsersInput {
+  skipedUsers?: number;
   maxUsers: number;
 }

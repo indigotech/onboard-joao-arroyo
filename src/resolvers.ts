@@ -35,6 +35,7 @@ export const resolvers = {
       const userRepository = appDataSource.getRepository(User);
 
       const maxUsers = args?.data?.maxUsers ?? MAX_USERS;
+      const skippedUsers = args?.data?.skipedUsers || 0;
 
       if (maxUsers <= 0) {
         throw new CustomError(
@@ -44,14 +45,38 @@ export const resolvers = {
         );
       }
 
+      if (skippedUsers < 0) {
+        throw new CustomError(
+          'The number of skipped users is invalid.',
+          400,
+          'The number of skipped users should not be negative.',
+        );
+      }
+
       const fetchedUsers: User[] = await userRepository.find({
         order: {
           name: 'ASC',
         },
+        skip: skippedUsers,
         take: maxUsers,
       });
 
-      return fetchedUsers;
+      const processedCheckUsers = fetchedUsers.map((user) => {
+        return {
+          birthDate: user.birthDate,
+          email: user.email,
+          id: user.id.toString(),
+          name: user.name,
+        };
+      });
+
+      const userCount = await userRepository.count();
+      const isLast = maxUsers + skippedUsers >= userCount;
+      const isFirst = skippedUsers == 0;
+
+      //console.log(JSON.stringify(processedCheckUsers));
+
+      return { users: processedCheckUsers, userCount: userCount, isLast: isFirst, isFirst: isLast };
     },
   },
 

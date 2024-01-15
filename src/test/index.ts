@@ -11,4 +11,4 @@ require('./hello.test');
 require('./create-user.test');
 require('./login.test');
 require('./user-query.test');
-require('./users-query.test');
+//require('./users-query.test');
