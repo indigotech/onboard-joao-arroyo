@@ -5,6 +5,7 @@ import { appDataSource } from '../data-source';
 import { CustomError } from '../custom-error';
 import { hashPassword } from '../utils';
 import { generateToken } from '../token-generator';
+import { verify } from 'jsonwebtoken';
 
 async function createUser(user: { name: string; password: string; birthDate: string; email: string }) {
   const userRepository = appDataSource.getRepository(User);
@@ -89,8 +90,8 @@ describe('Login Mutation', () => {
     const loginParams = { email: 'test@fake.com', password: 'c0rr3ctp4ass' };
     const response = await loginRequest({ input: loginParams });
     const loginResponse = response?.data?.data?.login;
+    const checkToken = generateToken({ id: createdUser.id.toString() }, false);
 
-    const checkToken = generateToken({ id: createdUser.id.toString() });
     expect(loginResponse).to.deep.eq({
       token: checkToken,
       user: {
@@ -100,5 +101,40 @@ describe('Login Mutation', () => {
         name: createdUser.name,
       },
     });
+  });
+
+  it('should complete login with remember me', async () => {
+    const user = {
+      birthDate: '09/11/2022',
+      email: 'test@fake.com',
+      name: 'test user',
+      password: 'c0rr3ctp4ass',
+    };
+    const createdUser = await createUser(user);
+
+    const loginParams = { email: 'test@fake.com', password: 'c0rr3ctp4ass', rememberMe: true };
+
+    const response = await loginRequest({ input: loginParams });
+
+    const loginResponse = response?.data?.data?.login;
+
+    const checkToken = generateToken({ id: createdUser.id.toString() }, true);
+
+    expect(loginResponse).to.deep.eq({
+      token: checkToken,
+      user: {
+        id: createdUser.id.toString(),
+        email: createdUser.email,
+        birthDate: createdUser.birthDate,
+        name: createdUser.name,
+      },
+    });
+
+    const token: string = loginResponse.token;
+    const key: string = process.env.JWT_KEY || ' ';
+
+    const decodedToken = verify(token, key) as { email: string; iat: number; id: string; exp: number };
+    const expirationInDays = (decodedToken.exp - decodedToken.iat) / (60 * 60 * 24);
+    expect(expirationInDays).to.equal(7);
   });
 });
