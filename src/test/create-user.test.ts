@@ -33,6 +33,7 @@ describe('Create User Mutation', () => {
   });
 
   it('should register an user', async () => {
+    const userRepository = appDataSource.getRepository(User);
     const newUser = {
       password: 'ex4mpleus3r',
       email: 'first@example.com',
@@ -41,9 +42,6 @@ describe('Create User Mutation', () => {
     };
 
     const createResult = await createUserRequest({ input: newUser });
-
-    expect(createResult.data?.data?.createUser).to.exist;
-
     const createdUser: User = createResult.data?.data?.createUser;
 
     expect(createdUser.id).to.exist;
@@ -52,15 +50,13 @@ describe('Create User Mutation', () => {
     expect(createdUser.birthDate).to.equal(newUser.birthDate);
     expect(createdUser.name).to.equal(newUser.name);
 
-    const userRepository = appDataSource.getRepository(User);
-
     const fetchedUser = await userRepository.findOne({
       where: {
         id: createdUser.id,
       },
     });
-
-    expect(fetchedUser).to.exist;
+    const hashedPassword = fetchedUser?.password ?? '';
+    const matchedPasswords = await bcrypt.compare(newUser.password, hashedPassword);
 
     expect(fetchedUser?.id).to.exist;
     expect(fetchedUser?.id).to.match(/^\d+$/);
@@ -68,9 +64,6 @@ describe('Create User Mutation', () => {
     expect(fetchedUser?.birthDate).to.equal(newUser.birthDate);
     expect(fetchedUser?.name).to.equal(newUser.name);
     expect(fetchedUser?.password).to.have.string('$2b$10$');
-
-    const hashedPassword = fetchedUser?.password ?? '';
-    const matchedPasswords = await bcrypt.compare(newUser.password, hashedPassword);
     expect(matchedPasswords).to.be.true;
   });
 
@@ -83,7 +76,6 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
     const copyUser = { ...newUser };
-
     await userRepository.save(newUser);
 
     const result = await createUserRequest({ input: copyUser });
@@ -91,7 +83,23 @@ describe('Create User Mutation', () => {
     expect(result?.data?.errors[0].message).to.equal('Invalid email.');
     expect(result?.data?.errors[0].code).to.equal(409);
     expect(result?.data?.errors[0].additionalInfo).to.equal('This email is already in use.');
-
     expect(await userRepository.count()).to.equal(1);
+  });
+
+  it('should not register due to an invalid email.', async () => {
+    const newUser = {
+      password: 'v4lidp4ass',
+      email: 'notAnEmail',
+      birthDate: '09/12/2004',
+      name: 'user 1',
+    };
+
+    const result = await createUserRequest({ input: newUser });
+
+    expect(result?.data?.errors[0]).to.deep.eq({
+      message: 'Invalid email.',
+      code: 400,
+      additionalInfo: 'The provided email does not correspond to a valid email.',
+    });
   });
 });
