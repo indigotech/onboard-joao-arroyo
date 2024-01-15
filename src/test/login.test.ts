@@ -131,14 +131,10 @@ describe('Login Mutation', () => {
     });
 
     const token: string = loginResponse.token;
-    const key: string | undefined = process.env.JWT_KEY;
+    const key: string = process.env.JWT_KEY || ' ';
 
-    if (key) {
-      const decodedToken = verify(token, key) as { iat: number; id: string; exp: number };
-      const expirationInDays = (decodedToken.exp - decodedToken.iat) / (60 * 60 * 24);
-      expect(expirationInDays).to.equal(7);
-    } else {
-      console.error('JWT key not found! Check your test.env file and add the env var.');
-    }
+    const decodedToken = verify(token, key) as { email: string; iat: number; id: string; exp: number };
+    const expirationInDays = (decodedToken.exp - decodedToken.iat) / (60 * 60 * 24);
+    expect(expirationInDays).to.equal(7);
   });
 });
