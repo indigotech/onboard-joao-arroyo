@@ -3,8 +3,7 @@ import { CustomError } from './custom-error';
 import { verify } from 'jsonwebtoken';
 
 export function authenticate(token: string) {
-  const hasToken = !!token;
-  if (!hasToken) {
+  if (!token) {
     throw new CustomError('Access denied.', 401, 'Authentication required.');
   }
 

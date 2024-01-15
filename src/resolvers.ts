@@ -53,7 +53,8 @@ export const resolvers = {
     login: async (_: unknown, args: { data: LoginInput }) => {
       const userRepository = appDataSource.getRepository(User);
 
-      if (!validEmail(args.data.email)) {
+      const email: string = args.data.email;
+      if (!validEmail(email)) {
         throw new CustomError('Invalid email.', 400, 'The provided email does not correspond to a valid email.');
       }
 
@@ -77,7 +78,7 @@ export const resolvers = {
       }
 
       const rememberMe = args.data.rememberMe === true;
-      const token = generateToken({ id: user.id.toString() }, rememberMe);
+      const token = generateToken(process.env.JWT_KEY, { id: user.id.toString() }, rememberMe);
 
       return { user: user, token: token };
     },

@@ -17,7 +17,6 @@ export async function createUserRequest(variables, token) {
     {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
       },
     },
   );

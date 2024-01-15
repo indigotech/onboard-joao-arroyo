@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { appDataSource } from '../data-source';
 import { User } from '../entity/User';
 import * as bcrypt from 'bcrypt';
-import { generateToken, generateInvalidToken } from '../token-generator';
+import { generateToken } from '../token-generator';
 import { CustomError } from '../custom-error';
 
 describe('Create User Mutation', () => {
@@ -45,7 +45,7 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
 
-    const token = generateInvalidToken({ email: newUser.email, id: '1' }, false);
+    const token = generateToken('wrongkey', { id: '1' }, false);
 
     const result = await createUserRequest({ input: newUser }, token);
 
@@ -66,7 +66,7 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
 
-    const token = generateToken({ id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY || ' ', { id: '1' }, false);
 
     const result = await createUserRequest({ input: newUser }, token);
 
@@ -86,7 +86,7 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
 
-    const token = generateToken({ id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY || '', { id: '1' }, false);
     const createResult = await createUserRequest({ input: newUser }, token);
     const createdUser: User = createResult.data?.data?.createUser;
 
@@ -124,7 +124,7 @@ describe('Create User Mutation', () => {
     const copyUser = { ...newUser };
     await userRepository.save(newUser);
 
-    const token = generateToken({ id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY || '', { id: '1' }, false);
     const result = await createUserRequest({ input: copyUser }, token);
 
     expect(result?.data?.errors[0].message).to.equal('Invalid email.');
@@ -141,7 +141,7 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
 
-    const token = generateToken({ id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY || '', { id: '1' }, false);
     const result = await createUserRequest({ input: newUser }, token);
 
     expect(result?.data?.errors[0]).to.deep.eq({
