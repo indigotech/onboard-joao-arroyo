@@ -29,7 +29,7 @@ async function generateRandomAddressData() {
   return {
     cep: fakerPT_BR.location.zipCode(),
     street: fakerPT_BR.location.street(),
-    streetNumber: (Math.floor(Math.random() * 1000) + 1).toString(),
+    streetNumber: fakerPT_BR.location.buildingNumber(),
     complement: fakerPT_BR.location.secondaryAddress(),
     neighborhood: fakerPT_BR.location.county(),
     city: fakerPT_BR.location.city(),
