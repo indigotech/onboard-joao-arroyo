@@ -48,10 +48,20 @@ export async function userQueryRequest(variables: { input: QueryUserInput }, tok
     {
       query: `query ($input: QueryUserInput!) {
         user(data: $input) {
+          id
+          name
           email
           birthDate
-          name
-          id
+          addresses {
+            id
+            cep
+            street
+            streetNumber
+            complement
+            neighborhood
+            city
+            state
+          }
         }
       }`,
       variables: variables,
@@ -79,6 +89,16 @@ export async function usersQueryRequest(variables: { input?: QueryUsersInput } |
             name
             email
             birthDate          
+            addresses {
+              id
+              cep
+              street
+              streetNumber
+              complement
+              neighborhood
+              city
+              state
+            }
           }
         }
       }`,

@@ -6,6 +6,7 @@ import { CustomError } from '../custom-error';
 import { hashPassword } from '../utils';
 import { generateToken } from '../token-generator';
 import { verify } from 'jsonwebtoken';
+import { Address } from '../entity/Address';
 
 async function createUser(user: { name: string; password: string; birthDate: string; email: string }) {
   const userRepository = appDataSource.getRepository(User);
@@ -15,6 +16,7 @@ async function createUser(user: { name: string; password: string; birthDate: str
 
 describe('Login Mutation', () => {
   afterEach(async () => {
+    await appDataSource.createQueryBuilder().delete().from(Address).execute();
     await appDataSource.createQueryBuilder().delete().from(User).execute();
   });
 
