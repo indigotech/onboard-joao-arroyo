@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { CreateUserInput, LoginInput, QueryUserInput } from '../interfaces';
+import { CreateUserInput, LoginInput, QueryUserInput, QueryUsersInput } from '../interfaces';
 
 export async function createUserRequest(variables: { input: CreateUserInput }, token: string) {
   const result = await axios.post(
@@ -59,7 +59,29 @@ export async function userQueryRequest(variables: { input: QueryUserInput }, tok
     {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
+      },
+    },
+  );
+  return result;
+}
+
+export async function usersQueryRequest(variables: { input?: QueryUsersInput } | undefined, token: string) {
+  const result = await axios.post(
+    `http://localhost:${process.env.PORT}/graphql`,
+    {
+      query: `query ($input: QueryUsersInput) {
+        users(data: $input) {
+          email
+          birthDate
+          name
+          id
+        }
+      }`,
+      variables: variables,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
     },
   );

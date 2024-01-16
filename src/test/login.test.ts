@@ -90,7 +90,7 @@ describe('Login Mutation', () => {
     const loginParams = { email: 'test@fake.com', password: 'c0rr3ctp4ass' };
     const response = await loginRequest({ input: loginParams });
     const loginResponse = response?.data?.data?.login;
-    const checkToken = generateToken(process.env.JWT_KEY || '', { id: createdUser.id.toString() }, false);
+    const checkToken = generateToken(process.env.JWT_KEY ?? '', { id: createdUser.id.toString() }, false);
 
     expect(loginResponse).to.deep.eq({
       token: checkToken,
@@ -118,7 +118,7 @@ describe('Login Mutation', () => {
 
     const loginResponse = response?.data?.data?.login;
 
-    const checkToken = generateToken(process.env.JWT_KEY || '', { id: createdUser.id.toString() }, true);
+    const checkToken = generateToken(process.env.JWT_KEY ?? '', { id: createdUser.id.toString() }, true);
 
     expect(loginResponse).to.deep.eq({
       token: checkToken,
@@ -131,7 +131,7 @@ describe('Login Mutation', () => {
     });
 
     const token: string = loginResponse.token;
-    const key: string = process.env.JWT_KEY || ' ';
+    const key: string = process.env.JWT_KEY ?? ' ';
 
     const decodedToken = verify(token, key) as { email: string; iat: number; id: string; exp: number };
     const expirationInDays = (decodedToken.exp - decodedToken.iat) / (60 * 60 * 24);

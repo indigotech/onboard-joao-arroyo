@@ -1,7 +1,10 @@
+import { MAX_USERS } from './constants.json';
+
 export const typeDefs = `
     type Query {
       hello: String
-      user(data: QueryUserInput!): User      
+      user(data: QueryUserInput!): User
+      users(data: QueryUsersInput = { maxUsers: ${MAX_USERS} }): [User]
     }
       
     type User {
@@ -18,6 +21,10 @@ export const typeDefs = `
 
     input QueryUserInput {
       id: ID!
+    }
+
+    input QueryUsersInput {
+      maxUsers: Int = ${MAX_USERS}
     }
 
     input LoginInput {

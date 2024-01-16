@@ -24,16 +24,22 @@ async function generateRandomData(index: number) {
   };
 }
 
-async function seedDatabase() {
-  await startConnection();
+export async function seedDatabase(maxUsers = 50) {
   const userRepository = appDataSource.getRepository(User);
   const users = [];
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < maxUsers; i++) {
     const newUser: CreateUserInput = await generateRandomData(i);
     users.push(newUser);
   }
   await userRepository.save(users);
+}
+
+async function executeScript() {
+  await startConnection();
+  await seedDatabase();
   console.log('Succesfully added 50 users to the local database.');
 }
 
-seedDatabase().catch((error) => console.log(error));
+if (require.main === module) {
+  executeScript().catch((error) => console.log(error));
+}

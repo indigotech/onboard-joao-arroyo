@@ -66,7 +66,7 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
 
-    const token = generateToken(process.env.JWT_KEY || ' ', { id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY ?? ' ', { id: '1' }, false);
 
     const result = await createUserRequest({ input: newUser }, token);
 
@@ -86,7 +86,7 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
 
-    const token = generateToken(process.env.JWT_KEY || '', { id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
     const createResult = await createUserRequest({ input: newUser }, token);
     const createdUser: User = createResult.data?.data?.createUser;
 
@@ -124,7 +124,7 @@ describe('Create User Mutation', () => {
     const copyUser = { ...newUser };
     await userRepository.save(newUser);
 
-    const token = generateToken(process.env.JWT_KEY || '', { id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
     const result = await createUserRequest({ input: copyUser }, token);
 
     expect(result?.data?.errors[0].message).to.equal('Invalid email.');
@@ -141,7 +141,7 @@ describe('Create User Mutation', () => {
       name: 'user 1',
     };
 
-    const token = generateToken(process.env.JWT_KEY || '', { id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
     const result = await createUserRequest({ input: newUser }, token);
 
     expect(result?.data?.errors[0]).to.deep.eq({
