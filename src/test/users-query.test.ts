@@ -174,4 +174,66 @@ describe('Users query', () => {
       users: processedCheckUsers,
     });
   });
+
+  it('should fetch the default number of users skipping 3.', async () => {
+    const userRepository = appDataSource.getRepository(User);
+    await seedDatabase(18);
+
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
+    const response = await usersQueryRequest({ input: { skippedUsers: 3 } }, token);
+    const unwrappedResponse = response?.data?.data?.users;
+    const checkUsers: User[] = await userRepository.find({
+      order: {
+        name: 'ASC',
+      },
+      skip: 3,
+      take: MAX_USERS,
+    });
+    const processedCheckUsers = checkUsers.map((user) => {
+      return {
+        birthDate: user.birthDate,
+        email: user.email,
+        id: user.id.toString(),
+        name: user.name,
+      };
+    });
+
+    expect(unwrappedResponse).to.deep.eq({
+      isFirst: false,
+      isLast: true,
+      userCount: 18,
+      users: processedCheckUsers,
+    });
+  });
+
+  it('should fetch the 10 users skipping 2.', async () => {
+    const userRepository = appDataSource.getRepository(User);
+    await seedDatabase(14);
+
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
+    const response = await usersQueryRequest({ input: { skippedUsers: 2, maxUsers: 10 } }, token);
+    const unwrappedResponse = response?.data?.data?.users;
+    const checkUsers: User[] = await userRepository.find({
+      order: {
+        name: 'ASC',
+      },
+      skip: 2,
+      take: 10,
+    });
+    const processedCheckUsers = checkUsers.map((user) => {
+      return {
+        birthDate: user.birthDate,
+        email: user.email,
+        id: user.id.toString(),
+        name: user.name,
+      };
+    });
+
+    expect(unwrappedResponse).to.deep.eq({
+      isFirst: false,
+      isLast: false,
+      userCount: 14,
+      users: processedCheckUsers,
+    });
+  });
 });
