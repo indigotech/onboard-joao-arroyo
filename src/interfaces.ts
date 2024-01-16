@@ -1,3 +1,5 @@
+import { User } from './entity/User';
+
 export interface DecodedToken {
   email: string;
   id: string;
@@ -22,6 +24,13 @@ export interface QueryUserInput {
 }
 
 export interface QueryUsersInput {
-  skipedUsers?: number;
-  maxUsers: number;
+  skippedUsers?: number;
+  maxUsers?: number;
+}
+
+export interface QueryUsersResponse {
+  isFirst: boolean;
+  isLast: boolean;
+  userCount: number;
+  users: User[];
 }

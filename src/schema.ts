@@ -4,7 +4,7 @@ export const typeDefs = `
     type Query {
       hello: String
       user(data: QueryUserInput!): User
-      users(data: QueryUsersInput = { skippedUsers: 0, maxUsers: ${MAX_USERS} }): [User]
+      users(data: QueryUsersInput = { skippedUsers: 0, maxUsers: ${MAX_USERS} }): UsersResponse
     }
       
     type User {

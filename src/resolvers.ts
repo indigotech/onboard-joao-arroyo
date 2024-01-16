@@ -31,11 +31,10 @@ export const resolvers = {
     },
     users: async (_: unknown, args: { data: QueryUsersInput } | undefined, context: { token: string }) => {
       authenticate(context.token);
-
       const userRepository = appDataSource.getRepository(User);
 
       const maxUsers = args?.data?.maxUsers ?? MAX_USERS;
-      const skippedUsers = args?.data?.skipedUsers || 0;
+      const skippedUsers = args?.data?.skippedUsers || 0;
 
       if (maxUsers <= 0) {
         throw new CustomError(
@@ -74,9 +73,7 @@ export const resolvers = {
       const isLast = maxUsers + skippedUsers >= userCount;
       const isFirst = skippedUsers == 0;
 
-      //console.log(JSON.stringify(processedCheckUsers));
-
-      return { users: processedCheckUsers, userCount: userCount, isLast: isFirst, isFirst: isLast };
+      return { users: processedCheckUsers, userCount: userCount, isLast: isLast, isFirst: isFirst };
     },
   },
 
