@@ -34,7 +34,7 @@ export const resolvers = {
       const userRepository = appDataSource.getRepository(User);
 
       const maxUsers = args?.data?.maxUsers ?? MAX_USERS;
-      const skippedUsers = args?.data?.skippedUsers || 0;
+      const skippedUsers = args?.data?.skippedUsers ?? 0;
 
       if (maxUsers <= 0) {
         throw new CustomError(
@@ -52,7 +52,7 @@ export const resolvers = {
         );
       }
 
-      const fetchedUsers: User[] = await userRepository.find({
+      const [fetchedUsers, userCount] = await userRepository.findAndCount({
         order: {
           name: 'ASC',
         },
@@ -69,7 +69,6 @@ export const resolvers = {
         };
       });
 
-      const userCount = await userRepository.count();
       const isLast = maxUsers + skippedUsers >= userCount;
       const isFirst = skippedUsers == 0;
 

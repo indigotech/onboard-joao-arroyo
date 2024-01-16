@@ -206,7 +206,7 @@ describe('Users query', () => {
     });
   });
 
-  it('should fetch the 10 users skipping 2.', async () => {
+  it('should fetch 10 users skipping 2.', async () => {
     const userRepository = appDataSource.getRepository(User);
     await seedDatabase(14);
 
@@ -233,6 +233,68 @@ describe('Users query', () => {
       isFirst: false,
       isLast: false,
       userCount: 14,
+      users: processedCheckUsers,
+    });
+  });
+
+  it('should fetch 2 users skipping 8, despite maximum of 4.', async () => {
+    const userRepository = appDataSource.getRepository(User);
+    await seedDatabase(10);
+
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
+    const response = await usersQueryRequest({ input: { skippedUsers: 8, maxUsers: 4 } }, token);
+    const unwrappedResponse = response?.data?.data?.users;
+    const checkUsers: User[] = await userRepository.find({
+      order: {
+        name: 'ASC',
+      },
+      skip: 8,
+      take: 4,
+    });
+    const processedCheckUsers = checkUsers.map((user) => {
+      return {
+        birthDate: user.birthDate,
+        email: user.email,
+        id: user.id.toString(),
+        name: user.name,
+      };
+    });
+
+    expect(unwrappedResponse).to.deep.eq({
+      isFirst: false,
+      isLast: true,
+      userCount: 10,
+      users: processedCheckUsers,
+    });
+  });
+
+  it('should not fetch users because skipped is bigger than user count.', async () => {
+    const userRepository = appDataSource.getRepository(User);
+    await seedDatabase(10);
+
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
+    const response = await usersQueryRequest({ input: { skippedUsers: 10 } }, token);
+    const unwrappedResponse = response?.data?.data?.users;
+    const checkUsers: User[] = await userRepository.find({
+      order: {
+        name: 'ASC',
+      },
+      skip: 10,
+      take: MAX_USERS,
+    });
+    const processedCheckUsers = checkUsers.map((user) => {
+      return {
+        birthDate: user.birthDate,
+        email: user.email,
+        id: user.id.toString(),
+        name: user.name,
+      };
+    });
+
+    expect(unwrappedResponse).to.deep.eq({
+      isFirst: false,
+      isLast: true,
+      userCount: 10,
       users: processedCheckUsers,
     });
   });
