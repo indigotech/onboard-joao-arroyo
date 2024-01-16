@@ -15,7 +15,7 @@ async function createUser(user: { name: string; password: string; birthDate: str
 
 describe('Login Mutation', () => {
   afterEach(async () => {
-    await appDataSource.getRepository(User).clear();
+    await appDataSource.createQueryBuilder().delete().from(User).execute();
   });
 
   it('should not complete login due to email not found', async () => {

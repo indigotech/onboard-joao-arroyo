@@ -8,6 +8,7 @@
     "compile": "npm run clean-dist && tsc -p tsconfig.json",
     "start": "npm run compile && node ./dist/index.js",
     "seeds": "npm run compile && node ./dist/seed/seeds.js",
+    "test-address": "npm run compile && node ./dist/seed/address.js",
     "test": "mocha -r ts-node/register src/test/index.ts --exit",
     "lint": "eslint . --fix",
     "format": "prettier --write .",
