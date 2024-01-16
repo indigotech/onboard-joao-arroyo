@@ -6,6 +6,7 @@ import { hashPassword, validEmail, validPassword } from './utils';
 import { generateToken } from './token-generator';
 import { LoginInput, QueryUsersInput } from 'interfaces';
 import { authenticate } from './authenticate';
+import { MAX_USERS } from './constants.json';
 
 export const resolvers = {
   Query: {
@@ -33,7 +34,7 @@ export const resolvers = {
 
       const userRepository = appDataSource.getRepository(User);
 
-      const maxUsers = args?.data?.maxUsers || 15;
+      const maxUsers = args?.data?.maxUsers ?? MAX_USERS;
 
       if (maxUsers <= 0) {
         throw new CustomError(
@@ -43,7 +44,7 @@ export const resolvers = {
         );
       }
 
-      const fetchedUsers: User[] | undefined = await userRepository.find({
+      const fetchedUsers: User[] = await userRepository.find({
         order: {
           name: 'ASC',
         },

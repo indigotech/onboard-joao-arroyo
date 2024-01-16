@@ -48,7 +48,7 @@ describe('User query', () => {
 
     const savedUser: User = await userRepository.save(user);
     const wrongId: string = (savedUser.id + 1).toString();
-    const token = generateToken(process.env.JWT_KEY || '', { id: savedUser.id.toString() }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: savedUser.id.toString() }, false);
 
     const response = await userQueryRequest({ input: { id: wrongId } }, token);
 
@@ -75,7 +75,7 @@ describe('User query', () => {
 
     const savedUser: User = await userRepository.save(user);
     const userId: string = savedUser.id.toString();
-    const token = generateToken(process.env.JWT_KEY || '', { id: userId }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: userId }, false);
     const response = await userQueryRequest({ input: { id: userId } }, token);
 
     expect(response).to.exist;

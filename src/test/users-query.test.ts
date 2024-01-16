@@ -5,6 +5,7 @@ import { CustomError } from '../custom-error';
 import { usersQueryRequest } from './helper';
 import { generateToken } from '../token-generator';
 import { seedDatabase } from '../seed/seeds';
+import { MAX_USERS } from '../constants.json';
 
 describe('Users query', () => {
   afterEach(async () => {
@@ -45,7 +46,7 @@ describe('Users query', () => {
     };
 
     const savedUser: User = await userRepository.save(user);
-    const token = generateToken(process.env.JWT_KEY || '', { id: savedUser.id.toString() }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: savedUser.id.toString() }, false);
 
     const response = await usersQueryRequest({ input: { maxUsers: -1 } }, token);
     const customError: CustomError = response?.data?.errors[0];
@@ -69,11 +70,12 @@ describe('Users query', () => {
     const savedUser: User = await userRepository.save(user);
     const userId: string = savedUser.id.toString();
 
-    const token = generateToken(process.env.JWT_KEY || '', { id: userId }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: userId }, false);
     const response = await usersQueryRequest({ input: { maxUsers: 1 } }, token);
-    const fetchedUser = response?.data?.data?.users?.[0];
+    const fetchedUsers: User[] = response?.data?.data?.users;
 
-    expect(fetchedUser).to.deep.eq({
+    expect(fetchedUsers.length).to.eq(1);
+    expect(fetchedUsers[0]).to.deep.eq({
       id: savedUser.id.toString(),
       name: savedUser.name,
       birthDate: savedUser.birthDate,
@@ -86,7 +88,7 @@ describe('Users query', () => {
     await seedDatabase(12);
 
     const maxUsers = 10;
-    const token = generateToken(process.env.JWT_KEY || '', { id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
     const response = await usersQueryRequest({ input: { maxUsers: maxUsers } }, token);
     const fetchedUsers = response?.data?.data?.users;
     const checkUsers: User[] = await userRepository.find({
@@ -104,6 +106,7 @@ describe('Users query', () => {
       };
     });
 
+    expect(fetchedUsers.length).to.eq(10);
     expect(fetchedUsers).to.deep.eq(processedCheckUsers);
   });
 
@@ -111,14 +114,14 @@ describe('Users query', () => {
     const userRepository = appDataSource.getRepository(User);
     await seedDatabase(17);
 
-    const token = generateToken(process.env.JWT_KEY || '', { id: '1' }, false);
+    const token = generateToken(process.env.JWT_KEY ?? '', { id: '1' }, false);
     const response = await usersQueryRequest({}, token);
     const fetchedUsers = response?.data?.data?.users;
     const checkUsers: User[] = await userRepository.find({
       order: {
         name: 'ASC',
       },
-      take: 15,
+      take: MAX_USERS,
     });
     const processedCheckUsers = checkUsers.map((user) => {
       return {
