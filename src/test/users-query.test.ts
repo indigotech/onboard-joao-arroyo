@@ -10,7 +10,7 @@ import { QueryUsersResponse } from '../interfaces';
 
 describe('Users query', () => {
   afterEach(async () => {
-    await appDataSource.getRepository(User).clear();
+    await appDataSource.createQueryBuilder().delete().from(User).execute();
   });
 
   it('should not fetch users due to invalid token', async () => {

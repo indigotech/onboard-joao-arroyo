@@ -25,7 +25,7 @@ async function generateRandomUserData() {
   };
 }
 
-async function generateRandomAddressData() {
+function generateRandomAddressData() {
   return {
     cep: fakerPT_BR.location.zipCode(),
     street: fakerPT_BR.location.street(),
@@ -44,7 +44,7 @@ export async function seedDatabase() {
   const userWithOneAddressData: CreateUserInput = await generateRandomUserData();
   const userWithOneAddress = await userRepository.save(userWithOneAddressData);
 
-  const addressDataForUserWithOneAddress = await generateRandomAddressData();
+  const addressDataForUserWithOneAddress = generateRandomAddressData();
   await addressRepository.save({
     ...addressDataForUserWithOneAddress,
     user: userWithOneAddress,
@@ -53,8 +53,8 @@ export async function seedDatabase() {
   const userWithTwoAddressesData: CreateUserInput = await generateRandomUserData();
   const userWithTwoAddresses = await userRepository.save(userWithTwoAddressesData);
 
-  const addressDataForUserWithTwoAddresses1 = await generateRandomAddressData();
-  const addressDataForUserWithTwoAddresses2 = await generateRandomAddressData();
+  const addressDataForUserWithTwoAddresses1 = generateRandomAddressData();
+  const addressDataForUserWithTwoAddresses2 = generateRandomAddressData();
 
   await addressRepository.save({
     ...addressDataForUserWithTwoAddresses1,

@@ -7,7 +7,7 @@ import { generateToken } from '../token-generator';
 
 describe('User query', () => {
   afterEach(async () => {
-    await appDataSource.getRepository(User).clear();
+    await appDataSource.createQueryBuilder().delete().from(User).execute();
   });
 
   it('should not fetch user due to invalid token', async () => {

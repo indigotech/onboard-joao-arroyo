@@ -6,7 +6,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => Address, (address) => address.user)
+  @OneToMany(() => Address, (address) => address.user, { cascade: true, onDelete: 'CASCADE' })
   addresses: Address[];
 
   @Column()

@@ -8,7 +8,7 @@ import { CustomError } from '../custom-error';
 
 describe('Create User Mutation', () => {
   afterEach(async () => {
-    await appDataSource.getRepository(User).clear();
+    await appDataSource.createQueryBuilder().delete().from(User).execute();
   });
 
   it('should return no users at the beginning', async () => {
