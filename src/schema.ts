@@ -4,7 +4,7 @@ export const typeDefs = `
     type Query {
       hello: String
       user(data: QueryUserInput!): User
-      users(data: QueryUsersInput = { maxUsers: ${MAX_USERS} }): [User]
+      users(data: QueryUsersInput = { skippedUsers: 0, maxUsers: ${MAX_USERS} }): UsersResponse
     }
       
     type User {
@@ -12,6 +12,12 @@ export const typeDefs = `
       name: String!
       email: String!
       birthDate: String!
+    }
+    type UsersResponse {
+      users: [User]!,
+      userCount: Int!
+      isLast: Boolean!,
+      isFirst: Boolean!
     }
 
     type LoginResponse {
@@ -22,9 +28,10 @@ export const typeDefs = `
     input QueryUserInput {
       id: ID!
     }
-
+    
     input QueryUsersInput {
-      maxUsers: Int = ${MAX_USERS}
+      skippedUsers: Int = 0,
+      maxUsers: Int = ${MAX_USERS}      
     }
 
     input LoginInput {

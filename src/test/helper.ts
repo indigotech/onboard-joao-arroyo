@@ -71,10 +71,15 @@ export async function usersQueryRequest(variables: { input?: QueryUsersInput } |
     {
       query: `query ($input: QueryUsersInput) {
         users(data: $input) {
-          email
-          birthDate
-          name
-          id
+          isFirst
+          isLast
+          userCount
+          users {
+            id
+            name
+            email
+            birthDate          
+          }
         }
       }`,
       variables: variables,
