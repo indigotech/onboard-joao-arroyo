@@ -118,6 +118,7 @@ export const resolvers = {
         where: {
           email: args.data.email,
         },
+        relations: ['addresses'],
       });
 
       if (users.length == 0) {

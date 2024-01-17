@@ -90,7 +90,7 @@ describe('User query', () => {
     });
   });
 
-  it("should fetch the requested user and it's addresses.", async () => {
+  it('should fetch the requested user and its addresses.', async () => {
     const userRepository = appDataSource.getRepository(User);
     const addressRepository = appDataSource.getRepository(Address);
     const user = {

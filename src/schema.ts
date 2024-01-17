@@ -16,14 +16,7 @@ export const typeDefs = `
       neighborhood: String!
       city: String!
       state: String!
-    }
-
-    type SimplifiedUser {
-      id: ID!
-      name: String!
-      email: String!
-      birthDate: String!
-    }
+    }    
 
     type User {
       id: ID!
@@ -40,7 +33,7 @@ export const typeDefs = `
     }
 
     type LoginResponse {
-      user: SimplifiedUser!,            
+      user: User,            
       token: String!
     }
 
