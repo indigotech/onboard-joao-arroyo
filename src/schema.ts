@@ -5,23 +5,35 @@ export const typeDefs = `
       hello: String
       user(data: QueryUserInput!): User
       users(data: QueryUsersInput = { skippedUsers: 0, maxUsers: ${MAX_USERS} }): UsersResponse
-    }
-      
+    }              
+    
+    type Address {
+      id: ID!
+      cep: String!
+      street: String!
+      streetNumber: String!
+      complement: String
+      neighborhood: String!
+      city: String!
+      state: String!
+    }    
+
     type User {
       id: ID!
       name: String!
       email: String!
       birthDate: String!
+      addresses: [Address]!
     }
     type UsersResponse {
-      users: [User]!,
+      users: [User]!
       userCount: Int!
-      isLast: Boolean!,
+      isLast: Boolean!
       isFirst: Boolean!
     }
 
     type LoginResponse {
-      user: User!,            
+      user: User,            
       token: String!
     }
 

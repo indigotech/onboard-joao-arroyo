@@ -17,10 +17,12 @@ export const resolvers = {
       authenticate(context.token);
 
       const userRepository = appDataSource.getRepository(User);
-      const fetchedUser: User | undefined = await userRepository.findOne({
+
+      const fetchedUser: User = await userRepository.findOne({
         where: {
           id: +args.data.id,
         },
+        relations: ['addresses'],
       });
 
       if (!fetchedUser) {
@@ -58,21 +60,13 @@ export const resolvers = {
         },
         skip: skippedUsers,
         take: maxUsers,
-      });
-
-      const processedCheckUsers = fetchedUsers.map((user) => {
-        return {
-          birthDate: user.birthDate,
-          email: user.email,
-          id: user.id.toString(),
-          name: user.name,
-        };
+        relations: ['addresses'],
       });
 
       const isLast = maxUsers + skippedUsers >= userCount;
       const isFirst = skippedUsers == 0;
 
-      return { users: processedCheckUsers, userCount: userCount, isLast: isLast, isFirst: isFirst };
+      return { users: fetchedUsers, userCount: userCount, isLast: isLast, isFirst: isFirst };
     },
   },
 
@@ -124,6 +118,7 @@ export const resolvers = {
         where: {
           email: args.data.email,
         },
+        relations: ['addresses'],
       });
 
       if (users.length == 0) {
